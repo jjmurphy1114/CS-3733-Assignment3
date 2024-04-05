@@ -2,14 +2,13 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
-import FormLabel from '@mui/material/FormLabel';
 import {ChangeEvent} from "react";
 
 interface ButtonProps {
     label: string,
     options: string[],
     returnData: string,
-    handleChange: (event: ChangeEvent<HTMLInputElement> ) => string;
+    handleChange: (event: ChangeEvent<HTMLInputElement> ) => void;
 }
 
 export default function RadioButtonsGroup(props: ButtonProps) {
@@ -28,7 +27,10 @@ export default function RadioButtonsGroup(props: ButtonProps) {
                 value={props.returnData}
             >
                 {props.options.map((item) => (
-                    <FormControlLabel value={item} control={<Radio/>} label={item}>{item}</FormControlLabel>
+                    // @ts-expect-error this works as intended
+                    <FormControlLabel value={item} control={<Radio/>} label={item} sx={{
+                        color: "black"
+                    }}>{item}</FormControlLabel>
                 ))}
                 ;
             </RadioGroup>

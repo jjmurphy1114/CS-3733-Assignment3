@@ -1,16 +1,11 @@
-import {Grid, Box, Typography} from "@mui/material";
+import {Grid, Typography, SelectChangeEvent, Box} from "@mui/material";
 import {LeftAlignedTextbox} from "./LeftAlignedTextbox.tsx";
 import {ChangeEvent, useState} from "react";
 import RadioButtonsGroup from "./assets/RadioButtonsGroup.tsx";
-
-interface formSubmission {
-    name: string,
-    location: string,
-    priority: string,
-    field1: string,
-    field2: string,
-    status: string,
-}
+import {DropDown} from "./DropDown.tsx";
+import {formSubmission} from "./FormSubmission.ts";
+import {SubmitButton} from "./SubmitButton.tsx";
+import hospitalImage from "./assets/hospitalImage.jpeg";
 
 function App() {
 
@@ -18,8 +13,8 @@ function App() {
       name: "",
       location: "",
       priority: "",
-      field1: "",
-      field2: "",
+      service: "",
+      frequency: "",
       status: "",
   });
 
@@ -35,25 +30,57 @@ function App() {
         setFormResponses({...form, priority: e.target.value});
     }
 
+    function handleServiceInput(e: SelectChangeEvent){
+        setFormResponses({...form, service: e.target.value});
+        return e.target.value;
+    }
+
+    function handleStatusInput(e: ChangeEvent<HTMLInputElement>){
+      setFormResponses({...form, status: e.target.value});
+    }
+
+    function handleFrequencyInput(e: SelectChangeEvent){
+        setFormResponses({...form, frequency: e.target.value});
+        return e.target.value;
+    }
+
+    function clear(){
+      setFormResponses({
+          name: "",
+          location: "",
+          priority: "",
+          service: "",
+          frequency: "",
+          status: "",
+      });
+  }
+
+
   return (
      <Box
-         width="100vw"
-         height="100vh"
-         display="flex"
-         alignItems="center" // Center vertically
-         justifyContent="center" // Center horizontally
-         backgroundColor={"white"}
+         sx={{
+             width: "100vw",
+             height: "auto",
+             display: "flex",
+             alignItems: "center", // Center vertically
+             justifyContent: "center", // Center horizontally
+             backgroundImage: `url(${hospitalImage})`,
+             backgroundSize: "cover",
+             overflowX: "hidden"
+         }}
          >
          <Grid
          container
          direction={"row"}
-         rowSpacing={2}
+         rowSpacing={1}
          columnSpacing={3}
          justifyContent={"space-between"}
          boxShadow={4}
-         width={"80vw"}
          sx={{
              backgroundColor: "white",
+             width: "100%",
+             maxWidth: "80vw",
+             height: "auto",
          }}
      >
              <Grid item
@@ -73,44 +100,60 @@ function App() {
                 <Typography color={"black"}>
                     Name:
                 </Typography>
-                 <LeftAlignedTextbox label={"Name"} value={form.name} onChange={handleNameInput}/>
+                 <LeftAlignedTextbox label={"Name"}
+                                     value={form.name}
+                                     onChange={handleNameInput}/>
              </Grid>
              <Grid item xs={6}>
                 <Typography color={"black"}>
                     Location:
                 </Typography>
-                 <LeftAlignedTextbox label={"Location"} value={form.location} onChange={handleLocationInput}/>
+                 <LeftAlignedTextbox label={"Location"}
+                                     value={form.location}
+                                     onChange={handleLocationInput}/>
              </Grid>
              <Grid item xs={6}>
                  <Typography color={"black"}>
-                     Priority of Request:
+                     Priority of Sanitation:
                  </Typography>
-                 <RadioButtonsGroup label={"Priority"} options={["Low", "Medium", "High", "Emergency"]} returnData={form.priority} handleChange={handlePriorityInput}/>
+                 <RadioButtonsGroup label={"Priority"}
+                                    options={["Low", "Medium", "High", "Emergency"]}
+                                    returnData={form.priority}
+                                    handleChange={handlePriorityInput}/>
              </Grid>
              <Grid item xs={6}>
                  <Typography color={"black"}>
-                     Field 1 (dropdown):
+                     Service Needed:
                  </Typography>
+                 <DropDown items={["Routine Cleaning", "Deep Cleaning", "Waste Management", "Disinfection", "Dry Sanitation", "Biohazard Cleanup"]}
+                           handleChange={handleServiceInput}
+                           label={"Service"}
+                           returnData={form.service}/>
              </Grid>
              <Grid item xs={6}>
                  <Typography color={"black"}>
-                     Field 2 (checkbox?):
+                     Frequency Needed:
                  </Typography>
+                 <DropDown items={["Once", "Daily", "Weekly", "Bi-Weekly", "Monthly"]}
+                           handleChange={handleFrequencyInput}
+                           label={"Frequency"}
+                           returnData={form.frequency}/>
              </Grid>
              <Grid item xs={6}>
                  <Typography color={"black"}>
                      Status of the request (Radio buttons):
                  </Typography>
-                 <RadioButtonsGroup label={"Status"} options={["Unassigned", "Assigned", "InProgress", "Closed"]} returnData={form.priority} handleChange={handlePriorityInput}/>
+                 <RadioButtonsGroup label={"Status"}
+                                    options={["Unassigned", "Assigned", "InProgress", "Closed"]}
+                                    returnData={form.status}
+                                    handleChange={handleStatusInput}/>
              </Grid>
-             <Grid item xs={12}>
-                 <Typography color={"black"} align={"center"}>
-                     Submit button
-                 </Typography>
+             <Grid item xs={12} sx={{ display: "flex", my: 2, justifyContent: "center" }}>
+                 <SubmitButton input={form} text={"SUBMIT"} clear={clear}/>
              </Grid>
      </Grid>
      </Box>
-  )
+  );
 }
 
-export default App
+export default App;
