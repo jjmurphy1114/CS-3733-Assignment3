@@ -1,4 +1,4 @@
-import {Grid, Typography, SelectChangeEvent, Box} from "@mui/material";
+import {Grid, Typography, SelectChangeEvent, Box, Stack} from "@mui/material";
 import {LeftAlignedTextbox} from "./LeftAlignedTextbox.tsx";
 import {ChangeEvent, useState} from "react";
 import RadioButtonsGroup from "./assets/RadioButtonsGroup.tsx";
@@ -17,6 +17,8 @@ function App() {
       frequency: "",
       status: "",
   });
+
+  const [submittedData, setSubmittedData] = useState<formSubmission[]>([]);
 
   function handleNameInput(e: ChangeEvent<HTMLInputElement>){
       setFormResponses({...form, name: e.target.value});
@@ -55,24 +57,31 @@ function App() {
       });
   }
 
+  function updateSubmissionList(){
+      setSubmittedData([...submittedData, form]);
+  }
+
 
   return (
-     <Box
-         sx={{
-             width: "100vw",
-             height: "auto",
-             display: "flex",
-             alignItems: "center", // Center vertically
-             justifyContent: "center", // Center horizontally
-             backgroundImage: `url(${hospitalImage})`,
-             backgroundSize: "cover",
-             overflowX: "hidden"
-         }}
-         >
+     <Stack direction="column"
+            alignItems="center"
+            justifyContent="center"
+            spacing={3}
+            sx={{
+                width: "100vw",
+                height: "auto",
+                display: "flex",
+                alignItems: "center", // Center vertically
+                justifyContent: "center", // Center horizontally
+                backgroundImage: `url(${hospitalImage})`,
+                backgroundSize: "cover",
+                overflowX: "hidden",
+            }}>
+      <Box>
          <Grid
          container
          direction={"row"}
-         rowSpacing={1}
+         rowSpacing={0}
          columnSpacing={3}
          justifyContent={"space-between"}
          boxShadow={4}
@@ -81,6 +90,7 @@ function App() {
              width: "100%",
              maxWidth: "80vw",
              height: "auto",
+             opacity: "90%"
          }}
      >
              <Grid item
@@ -141,7 +151,7 @@ function App() {
              </Grid>
              <Grid item xs={6}>
                  <Typography color={"black"}>
-                     Status of the request (Radio buttons):
+                     Status of the request:
                  </Typography>
                  <RadioButtonsGroup label={"Status"}
                                     options={["Unassigned", "Assigned", "InProgress", "Closed"]}
@@ -149,10 +159,37 @@ function App() {
                                     handleChange={handleStatusInput}/>
              </Grid>
              <Grid item xs={12} sx={{ display: "flex", my: 2, justifyContent: "center" }}>
-                 <SubmitButton input={form} text={"SUBMIT"} clear={clear}/>
+                 <SubmitButton input={form} text={"SUBMIT"} clear={clear} updateSubmissionList={updateSubmissionList}/>
              </Grid>
      </Grid>
      </Box>
+     <Box>
+         <Grid
+             container
+             direction={"row"}
+             rowSpacing={1}
+             columnSpacing={3}
+             justifyContent={"space-between"}
+             boxShadow={4}
+             sx={{
+                 backgroundColor: "white",
+                 width: "100%",
+                 maxWidth: "80vw",
+                 height: "auto",
+             }}
+         >
+             {submittedData.map((item: formSubmission) => (<Grid item xs={12}>
+                 <Typography color={"black"}>Name: {item.name}</Typography>
+                 <Typography color={"black"}>Location: {item.location}</Typography>
+                 <Typography color={"black"}>Service: {item.service}</Typography>
+                 <Typography color={"black"}>Frequency: {item.frequency}</Typography>
+                 <Typography color={"black"}>Priority: {item.priority}</Typography>
+                 <Typography color={"black"}>Status: {item.status}</Typography>
+                 </Grid>
+         ))};
+         </Grid>
+     </Box>
+     </Stack>
   );
 }
 

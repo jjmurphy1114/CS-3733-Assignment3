@@ -5,6 +5,7 @@ interface ButtonProps {
     text: string;
     input: formSubmission;
     clear: () => void;
+    updateSubmissionList: () => void;
 }
 
 export function SubmitButton(props: ButtonProps) {
@@ -24,6 +25,7 @@ export function SubmitButton(props: ButtonProps) {
             alert("Please select a status!");
         } else {
             console.log(props.input);
+            handleListUpdate();
             handleClear();
             alert("Submitted successfully");
         }
@@ -31,6 +33,10 @@ export function SubmitButton(props: ButtonProps) {
 
     function handleClear() {
         props.clear();
+    }
+
+    function handleListUpdate(){
+        props.updateSubmissionList();
     }
 
     return (
